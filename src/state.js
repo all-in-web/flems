@@ -18,6 +18,7 @@ const extMap = {
 }
 
 export const defaults = () => ({
+  compilerURL   : "https://static.flems.io/compilers",
   middle        : 50,
   selected      : '.js',
   color         : 'rgb(38,50,56)',

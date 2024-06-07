@@ -14,10 +14,10 @@ const load = memoize(url =>
 )
 
 const compilers = {
-  styl: file => load('https://static.flems.io/compilers/stylus.min.js').then(() => ({
+  styl: (file, compilerURL) => load(`${compilerURL}/stylus.min.js`).then(() => ({
     code: window.stylus.render(file.content)
   })),
-  scss: file => load('https://static.flems.io/compilers/sass.sync.js').then(() =>
+  scss: (file, compilerURL) => load(`${compilerURL}/sass.sync.js`).then(() =>
     new Promise((resolve, reject) =>
       window.Sass.compile(file.content, result => {
         result.message
@@ -26,7 +26,7 @@ const compilers = {
       })
     )
   ),
-  sass: file => load('https://static.flems.io/compilers/sass.sync.js').then(() =>
+  sass: (file, compilerURL) => load(`${compilerURL}/sass.sync.js`).then(() =>
     new Promise((resolve, reject) =>
       window.Sass.compile(file.content, {
         indentedSyntax: true
@@ -37,10 +37,10 @@ const compilers = {
       })
     )
   ),
-  less: file => load('https://static.flems.io/compilers/less.min.js').then(() =>
+  less: (file, compilerURL) => load(`${compilerURL}/less.min.js`).then(() =>
     window.less.render(file.content).then(result => ({ code: result.css }))
   ),
-  ts: file => load('https://static.flems.io/compilers/typescriptServices.js').then(() => {
+  ts: (file, compilerURL) => load(`${compilerURL}/typescriptServices.js`).then(() => {
     const result = window.ts.transpileModule(file.content, {
       fileName: file.name,
       compilerOptions: {
@@ -56,7 +56,7 @@ const compilers = {
       map: result.sourceMapText
     }
   }),
-  babel: file => load('https://static.flems.io/compilers/babel.min.js').then(() =>
+  babel: (file, compilerURL) => load(`${compilerURL}/babel.min.js`).then(() =>
     window.Babel.transform(file.content, {
       presets: [['es2015', { modules: false }], 'stage-2', 'react'],
       sourceMaps: true,
@@ -64,7 +64,7 @@ const compilers = {
       sourceFileName: file.name
     })
   ),
-  ls: file => load('https://static.flems.io/compilers/livescript-min.js').then(() => {
+  ls: (file, compilerURL) => load(`${compilerURL}/livescript-min.js`).then(() => {
     if (!window.livescript)
       window.livescript = window.require('livescript')
 
@@ -78,9 +78,9 @@ const compilers = {
       map: result.map.toString()
     }
   }),
-  coffee: file => Promise.all([
-    load('https://static.flems.io/compilers/babel.min.js'),
-    load('https://static.flems.io/compilers/coffeescript.js')
+  coffee: (file, compilerURL) => Promise.all([
+    load(`${compilerURL}/babel.min.js`),
+    load(`${compilerURL}/coffeescript.js`)
   ]).then(() => {
     const coffee = window.CoffeeScript.compile(file.content, {
       sourceMap: true,
@@ -96,7 +96,7 @@ const compilers = {
 
     return data
   }),
-  sibilant: file => load('https://static.flems.io/compilers/sibilant.js').then(() => {
+  sibilant: (file, compilerURL) => load(`${compilerURL}/sibilant.js`).then(() => {
     return {
       code: window.sibilant.sibilize(file.content)
     }

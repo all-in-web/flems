@@ -236,7 +236,7 @@ export default function(model) {
         content: file.content
       }
 
-    return compile(file).then(result => {
+    return compile(file, model.state.compilerURL).then(result => {
       if (result.error)
         consoleOutput(result.error)
 
